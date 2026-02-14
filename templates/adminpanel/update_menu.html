@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Menu Item</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+  <div class="card shadow p-4">
+
+    <h2 class="mb-4 text-center">Update Menu Item</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">Name:</label>
+        {{ form.name }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Description:</label>
+        {{ form.description }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Price:</label>
+        {{ form.price }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Image:</label>
+        {{ form.image }}
+        {% if menu_item.image %}
+          <p class="mt-2">Current Image:</p>
+          <img src="{{ menu_item.image.url }}" width="150" class="rounded shadow">
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Update</button>
+      <a href="{% url 'adminpanel:menu_list' menu_item.restaurant.id %}" class="btn btn-secondary">Back</a>
+    </form>
+
+  </div>
+</div>
+
+</body>
+</html>

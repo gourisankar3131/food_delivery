@@ -1,0 +1,72 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block content %}
+
+<h2 class="cart-title">Your Cart</h2>
+
+
+{% if items %}
+<div class="cart-container">
+
+
+    {% for item in items %}
+    <div class="cart-card">
+
+        {% if item.food_item.image %}
+            <img src="{{ item.food_item.image.url }}" alt="{{ item.food_item.name }}" class="cart-image">
+        {% endif %}
+
+        <div class="cart-details">
+            <h4 class="cart-item-name">{{ item.food_item.name }}</h4>
+
+            <p>
+                Restaurant:
+                <b>{{ item.food_item.restaurant.name }}</b>
+            </p>
+
+            <p>
+                Price: ₹{{ item.food_item.price }}
+            </p>
+
+            <!-- Quantity -->
+            <div class="qty-box">
+                <a href="{% url 'customer:add_to_cart' item.food_item.id %}?action=remove" class="qty-btn">−</a>
+                <span class="qty-count">{{ item.quantity }}</span>
+                <a href="{% url 'customer:add_to_cart' item.food_item.id %}?action=add" class="qty-btn">+</a>
+            </div>
+
+            <!-- Remove -->
+            <div class="cart-action">
+                <a href="{% url 'customer:remove_cart_item' item.id %}" class="btn btn-danger btn-sm">
+                    Remove
+                </a>
+            </div>
+
+            <!-- Buy Now -->
+            <div class="cart-action">
+                <a href="{% url 'customer:order_single_item' item.id %}" class="btn btn-warning w-100">
+                    Buy Now — ₹{{ item.food_item.price|floatformat:2 }}
+                </a>
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+<hr>
+
+<h3 class="cart-total">Total: ₹{{ total }}</h3>
+
+<a href="{% url 'customer:order_all_items' %}">
+    <button class="btn btn-primary btn-lg">
+        Order All Items
+    </button>
+</a>
+
+{% else %}
+<p class="empty-cart">Your cart is empty.</p>
+{% endif %}
+
+{% endblock %}

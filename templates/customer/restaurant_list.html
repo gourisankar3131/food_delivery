@@ -1,0 +1,28 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block content %}
+
+<h2 class="page-title">Restaurants</h2>
+
+<div class="restaurant-grid">
+  {% for restaurant in restaurants %}
+    <div class="restaurant-card">
+      {% if restaurant.image %}
+        <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}">
+      {% endif %}
+      <div class="restaurant-info">
+        <h3>{{ restaurant.name }}</h3>
+        <p class="status">
+          {% if restaurant.is_open %}
+            <span class="badge-open">Open</span>
+          {% else %}
+            <span class="badge-closed">Closed</span>
+          {% endif %}
+        </p>
+        <a href="{% url 'customer:menu_list' restaurant.id %}" class="view-menu-btn">View Menu</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+
+{% block content %}
+<div class="container mt-5 text-center">
+
+    <div class="card shadow p-4" style="border-radius: 15px;">
+        <h2 class="text-success fw-bold">Payment Successful!</h2>
+        <p>Your order is confirmed. Thank you! ❤️</p>
+
+        <a href="{% url 'customer:restaurants' %}" class="btn btn-primary mt-3">
+           Continue Shopping
+        </a>
+    </div>
+
+</div>
+{% endblock %}

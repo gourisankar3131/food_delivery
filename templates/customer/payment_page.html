@@ -1,0 +1,24 @@
+<h3>Order Summary</h3>
+{% for item in order_items %}
+  <p>{{ item.food_item.name }} × {{ item.quantity }} = ₹{{ item.food_item.price*item.quantity }}</p>
+{% endfor %}
+<hr>
+<h4>Total: ₹{{ total_amount }}</h4>
+
+<form method="POST" action="{% url 'customer:payment_success' %}">
+  {% csrf_token %}
+  <input type="hidden" name="checkout_id" value="{{ checkout_id }}">
+  <script
+      src="https://checkout.razorpay.com/v1/checkout.js"
+      data-key="{{ razorpay_key_id }}"
+      data-amount="{{ total_amount|floatformat:0 }}"
+      data-currency="INR"
+      data-order_id="{{ razorpay_order_id }}"
+      data-buttontext="Pay Now"
+      data-name="My Food App"
+      data-description="Order Payment"
+      data-prefill.name="{{ request.user.username }}"
+      data-prefill.email="{{ request.user.email }}"
+      data-theme.color="#F37254">
+  </script>
+</form>

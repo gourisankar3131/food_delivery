@@ -1,0 +1,9 @@
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <h2>Superuser Register</h2>
+    <input type="text" name="username" placeholder="Username"><br>
+    <input type="password" name="password" placeholder="Password"><br>
+    <button type="submit">Register</button>
+</form>
+<a href="{% url 'adminpanel:admin_login'%}">Already a superuser? Login</a>

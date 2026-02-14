@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Food Ordering App{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'customer/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1>🍽️ FoodHub</h1>
+            </div>
+            {% if request.user.is_authenticated %}
+            <div class="user-info">
+                <div class="user-avatar">{{ request.user.username|first|upper }}</div>
+                <span><strong>{{ request.user.username }}</strong></span>
+            </div>
+            {% endif %}
+        </header>
+
+        <!-- Navigation -->
+        <nav>
+            <ul>
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'customer:restaurants' %}"><span class="nav-icon">🍴</span> Restaurants</a></li>
+                    <li><a href="{% url 'customer:cart_page' %}"><span class="nav-icon">🛒</span> Cart</a></li>
+                    <li><a href="{% url 'customer:logout' %}"><span class="nav-icon">🚪</span> Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'customer:login' %}"><span class="nav-icon">🔐</span> Login</a></li>
+                    <li><a href="{% url 'customer:register' %}"><span class="nav-icon">📝</span> Register</a></li>
+                    <li><a href="{% url 'customer:restaurants' %}"><span class="nav-icon">🍴</span> Browse Restaurants</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <!-- Messages -->
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <span class="alert-icon">
+                    {% if message.tags == 'success' %}✓{% endif %}
+                    {% if message.tags == 'error' %}✕{% endif %}
+                    {% if message.tags == 'warning' %}⚠{% endif %}
+                    {% if message.tags == 'info' %}ℹ{% endif %}
+                </span>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}
+            <div class="welcome-section">
+                <h2>Welcome to FoodHub! 🎉</h2>
+                <p>Discover amazing restaurants and order your favorite meals</p>
+                {% if not request.user.is_authenticated %}
+                <div class="welcome-buttons">
+                    <a href="{% url 'customer:login' %}" class="btn btn-primary">Get Started</a>
+                    <a href="{% url 'customer:restaurants' %}" class="btn btn-secondary">Browse Restaurants</a>
+                </div>
+                {% endif %}
+            </div>
+            {% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 FoodHub. Made with ❤️ for food lovers</p>
+        </footer>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

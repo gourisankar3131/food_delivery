@@ -1,0 +1,30 @@
+
+{% extends 'adminpanel/base.html' %}
+{% load static %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow-lg p-4 rounded-4" style="width: 350px;">
+    <h3 class="text-center mb-4"> Login</h3>
+    
+     {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label fw-semibold">Username</label>
+        <input type="text" class="form-control rounded-pill" id="exampleInputEmail1" name="username" placeholder="Enter username">
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label fw-semibold">Password</label>
+        <input type="password" class="form-control rounded-pill" id="exampleInputPassword1" name="password" placeholder="Enter password">
+      </div>
+      <button type="submit" class="btn btn-primary w-100 rounded-pill">Login</button>
+    </form>
+    <a href="{% url 'adminpanel:register'%}">Register Superuser</a>
+  </div>
+</div>
+{% endblock  %}
