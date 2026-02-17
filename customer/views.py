@@ -268,4 +268,3 @@ def payment_success(request):
         
         return render(request, "customer/payment_success.html")
     return HttpResponse("Invalid request method.")
-
