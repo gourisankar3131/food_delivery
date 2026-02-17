@@ -1,17 +1,68 @@
-<h3>Order Summary</h3>
-{% for item in order_items %}
-  <p>{{ item.food_item.name }} × {{ item.quantity }} = ₹{{ item.food_item.price*item.quantity }}</p>
-{% endfor %}
-<hr>
-<h4>Total: ₹{{ total_amount }}</h4>
+{% extends 'customer/base.html' %}
+{% block content %}
+<style>
+    .order-card {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    width: 420px;
+}
 
-<form method="POST" action="{% url 'customer:payment_success' %}">
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+    padding: 12px 0;
+}
+
+.price {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.total-box {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+</style>
+<div class="container mt-5 d-flex justify-content-center">
+  <div class="order-card shadow-lg p-4">
+
+    <h3 class="fw-bold text-center mb-3">
+      🛒 Order Summary
+    </h3>
+
+    <ul class="list-group mb-3">
+      {% for item in order_items %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ item.food_item.name }} × {{ item.quantity }}</span>
+        <span class="price">₹{{ item.food_item.price|floatformat:2 }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <div class="total-box">
+      <span>Total</span>
+      <span>₹{{ total_amount_inr }}</span>
+    </div>
+
+  </div>
+</div>
+
+<form method="POST" action="{% url 'customer:payment_success'  %}">
   {% csrf_token %}
   <input type="hidden" name="checkout_id" value="{{ checkout_id }}">
+
   <script
       src="https://checkout.razorpay.com/v1/checkout.js"
       data-key="{{ razorpay_key_id }}"
-      data-amount="{{ total_amount|floatformat:0 }}"
+      data-amount="{{ total_amount }}"   <!-- paisa -->
       data-currency="INR"
       data-order_id="{{ razorpay_order_id }}"
       data-buttontext="Pay Now"
@@ -22,3 +73,4 @@
       data-theme.color="#F37254">
   </script>
 </form>
+{% endblock %}

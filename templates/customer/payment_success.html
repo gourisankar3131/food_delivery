@@ -1,13 +1,37 @@
 
+
 {% block content %}
+<style>
+.success-card {
+    max-width: 450px;
+    margin: auto;
+    border-radius: 12px;
+    background: #b02d2d;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.success-icon {
+    font-size: 60px;
+    color: #28a745;
+}
+
+.success-btn {
+    padding: 10px 25px;
+    border-radius: 25px;
+}
+</style>
+
 <div class="container mt-5 text-center">
 
-    <div class="card shadow p-4" style="border-radius: 15px;">
-        <h2 class="text-success fw-bold">Payment Successful!</h2>
-        <p>Your order is confirmed. Thank you! ❤️</p>
+    <div class="success-card">
+        <div class="success-icon">✅</div>
 
-        <a href="{% url 'customer:restaurants' %}" class="btn btn-primary mt-3">
-           Continue Shopping
+        <h2 class="text-success fw-bold mt-2">Payment Successful</h2>
+        <p class="text-muted">Your order is confirmed. Thank you for ordering ❤️</p>
+
+        <a href="{% url 'customer:restaurants' %}" class="btn btn-primary success-btn mt-3">
+            Continue Ordering 
         </a>
     </div>
 

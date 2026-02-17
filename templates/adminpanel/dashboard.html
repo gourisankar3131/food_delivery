@@ -48,8 +48,8 @@
 
   <a href="{% url 'adminpanel:restaurant_list' %}">🍽 Restaurants</a>
 <a href="{% url 'adminpanel:menu_list_all' %}">📋 Menu Items</a>
-  <a href="#">🛒 Orders</a>
-  <a href="#">👤 Users</a>
+  <a href="{% url 'adminpanel:order_list' %}">🛒 Orders</a>
+  <a href="{% url 'adminpanel:user_list' %}">👤 Users</a>
   <a href="{% url 'adminpanel:admin_logout' %}" class="text-danger">Logout</a>
 </div>
 
@@ -93,42 +93,9 @@
 
   </div>
 
-  <!-- Recent Items Section -->
-  <div class="card shadow mt-4 p-4">
-    <h4>Recently Added Restaurants</h4>
-    <table class="table table-striped mt-3">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Date Added</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for restaurant in recent_restaurants %}
-        <tr>
-          <td>{{ restaurant.name }}</td>
-          <td>
-            {% if restaurant.is_open %}
-              <span class="badge bg-success">Open</span>
-            {% else %}
-              <span class="badge bg-danger">Closed</span>
-            {% endif %}
-          </td>
-          <td>{{ restaurant.created_at }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
 
-</div>
 
 </body>
 </html>
 
-{% comment %} <a href="{% url 'adminpanel:admin_logout' %}">Logout</a><br>
 
-<a href="{% url 'adminpanel:add_restaurant'%}">Add Restaurant</a>
-<a href="{% url 'adminpanel:restaurant_list' %}">Restaurant List</a>
- {% endcomment %}

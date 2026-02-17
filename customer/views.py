@@ -181,7 +181,7 @@ def order_single_item(request,cart_item_id):
         quantity=cart_item.quantity,
         checkout_id=checkout_id
     )
-    cart_item.delete()
+    
     
     return redirect('customer:payment',checkout_id=checkout_id)
    
@@ -205,48 +205,50 @@ def order_all_item(request):
             quantity=cart_item.quantity,
             checkout_id=checkout_id
         )
-    cart_items.delete()
+    
     
     return redirect('customer:payment',checkout_id=checkout_id)
 
+
 @login_required(login_url='customer:login')
 def payment_page(request, checkout_id=None):
-    customer = get_object_or_404(Customer,user=request.user)
+    customer = get_object_or_404(Customer, user=request.user)
 
     order_items = OrderItem.objects.filter(
         customer=customer,
         checkout_id=checkout_id,
         is_paid=False
     )
-    
+
     if not order_items.exists():
         return HttpResponse("No pending orders to pay.")
-    
-    #convert to float for calculation
-    total_amount_inr = float(sum(item.food_item.price * item.quantity 
-                                   for item in order_items))
-    
-    #calculate total amount in paise(razorpay requirement)
-    total_amount = int(total_amount_inr *100)
 
-    #Razopay order
-    razorpay_order = client.order.create(dict(
-        amount=total_amount,
-        currency='INR',
-        payment_capture='1'
-    ))
-    return render(request, 'customer/payment_page.html', {
-        'order_items': order_items,
-        'total_amount': total_amount,
-        'checkout_id':checkout_id,
-        'razorpay_order_id': razorpay_order['id'],
-        'razorpay_key_id': settings.RAZORPAY_KEY_ID,
-        
+    # Calculate total in INR
+    total_amount_inr = sum(item.food_item.price * item.quantity for item in order_items)
+
+    # Convert to paisa for Razorpay
+    total_amount = int(total_amount_inr * 100)
+
+    razorpay_order = client.order.create({
+        "amount": total_amount,
+        "currency": "INR",
+        "payment_capture": 1
     })
+
+    context = {
+        "order_items": order_items,
+        "total_amount": total_amount,           # paisa
+        "total_amount_inr": total_amount_inr,   # rupees
+        "checkout_id": checkout_id,
+        "razorpay_order_id": razorpay_order["id"],
+        "razorpay_key_id": settings.RAZORPAY_KEY_ID,
+    }
+
+    return render(request, "customer/payment_page.html", context)
 
 @csrf_exempt
 @login_required(login_url='customer:login')
-def payment_success(request, order_id):
+def payment_success(request):
     if request.method == "POST":
         razorpay_payment_id = request.POST.get('razorpay_payment_id')
         razorpay_order_id = request.POST.get('razorpay_order_id')
@@ -260,7 +262,10 @@ def payment_success(request, order_id):
         for item in order_items:
             item.is_paid = True
             item.save()
+            
+        # clear cart
+        CartItem.objects.filter(cart__customer=customer).delete()
         
-        return render(request, "customer/payment_success.html", {"order_id": order_id})
+        return render(request, "customer/payment_success.html")
     return HttpResponse("Invalid request method.")
 

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Orders</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+
+<h2>Customer Orders</h2>
+
+<table class="table table-bordered table-striped">
+<tr>
+  <th>ID</th>
+  <th>User</th>
+  <th>Restaurant</th>
+  <th>Food</th>
+  <th>Qty</th>
+  {% comment %} <th>Status</th>
+  <th>Date</th> {% endcomment %}
+</tr>
+
+{% for order in orders %}
+<tr>
+  <td>{{ order.id }}</td>
+  <td>{{ order.customer.user.username }}</td>
+  <td>{{ order.restaurant.name }}</td>
+  <td>{{ order.food_item.name }}</td>
+  <td>{{ order.quantity }}</td>
+  {% comment %} <td>{{ order.status }}</td>
+  <td>{{ order.ordered_at }}</td> {% endcomment %}
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
